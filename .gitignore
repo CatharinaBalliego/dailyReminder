@@ -6,6 +6,7 @@ target/
 mvnw
 mvnw.cmd
 .mvn/**
+src/main/resources/application.yml
 
 ### STS ###
 .apt_generated
