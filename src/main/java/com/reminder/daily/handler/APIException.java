@@ -22,6 +22,10 @@ public class APIException extends RuntimeException{
                 .build();
     }
 
+    public static APIException build(HttpStatus statusException, String message) {
+        return new APIException(statusException, message, null);
+    }
+
     public static APIException build(HttpStatus statusException, String message, Exception e){
         log.error("Exception", e);
         return new APIException(statusException, message, e);
