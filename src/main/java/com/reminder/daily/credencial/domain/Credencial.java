@@ -2,8 +2,7 @@ package com.reminder.daily.credencial.domain;
 
 
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +14,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 
-
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Collection;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
