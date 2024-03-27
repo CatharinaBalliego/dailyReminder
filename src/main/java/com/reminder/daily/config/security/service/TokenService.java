@@ -18,9 +18,9 @@ import java.util.Optional;
 @Service
 @Log4j2
 public class TokenService {
-    @Value("${reminder.jwt.expiracao")
+    @Value("${reminder.jwt.expiracao}")
     private String expiracao;
-    @Value("${reminder.jwt.chave")
+    @Value("${reminder.jwt.chave}")
     private String chave;
 
     public String gerarToken(Authentication authentication) {
