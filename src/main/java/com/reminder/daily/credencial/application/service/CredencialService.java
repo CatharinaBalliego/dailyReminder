@@ -2,9 +2,11 @@ package com.reminder.daily.credencial.application.service;
 
 import com.reminder.daily.credencial.domain.Credencial;
 import com.reminder.daily.usuario.application.api.UsuarioNovoRequest;
-import jakarta.validation.Valid;
+
+import javax.validation.Valid;
+
 
 public interface CredencialService {
-    void criarNovaCredencial(@Valid UsuarioNovoRequest usuarioNovoRequest);
+    void criarNovaCredencial(@Valid UsuarioNovoRequest usuario);
     Credencial buscaCredencialPorUsuario(String usuario);
 }
