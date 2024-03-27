@@ -32,7 +32,7 @@ public class AutenticacaoController implements AutenticacaoAPI {
     public TokenResponse reativaAuteticacao(String tokenExpirado) throws AuthenticationException {
         log.info("[start] AutenticacaoController - reativaAuteticacao");
         String tokenValidado = validaTokenExpirado(Optional.of(tokenExpirado));
-        var token = autenticacaoService.reativaAutenticacao(tokenValidado);
+        var token = autenticacaoService.reativaToken(tokenValidado);
         log.info("[finish] AutenticacaoController - reativaAuteticacao");
         return new TokenResponse(token);
     }
