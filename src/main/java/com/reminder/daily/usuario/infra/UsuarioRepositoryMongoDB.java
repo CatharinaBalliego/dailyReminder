@@ -32,4 +32,12 @@ public class UsuarioRepositoryMongoDB implements UsuarioRepository {
         log.info("[finish] UsuarioRepositoryMongoDB - buscarUsuarioPorId");
         return usuario;
     }
+
+    public Usuario buscarUsuarioPorEmail(String usuarioEmail){
+        log.info("[start] UsuarioRepositoryMongoDB - buscarUsuarioPorEmail");
+        Usuario usuario = usuarioMongoSpringRepository.findByEmail(usuarioEmail)
+                        .orElseThrow(() -> APIException.build(HttpStatus.BAD_REQUEST, "Usuario não encontrado!"));
+        log.info("[finish] UsuarioRepositoryMongoDB - buscarUsuarioPorEmail");
+        return usuario;
+    }
 }
