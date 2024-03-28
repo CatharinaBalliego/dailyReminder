@@ -20,7 +20,7 @@ public class AutenticacaoController implements AutenticacaoAPI {
 
     @Override
     @ResponseStatus(code = HttpStatus.OK)
-    public TokenResponse autetica(AutenticacaoRequest autenticacaoRequest){
+    public TokenResponse autentica(AutenticacaoRequest autenticacaoRequest){
         log.info("[start] AutenticacaoController - autetica");
         var token = autenticacaoService.autentica(autenticacaoRequest.getUserPassToken());
         log.info("[finish] AutenticacaoController - autetica");
