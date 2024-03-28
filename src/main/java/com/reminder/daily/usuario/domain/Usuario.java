@@ -1,11 +1,13 @@
 package com.reminder.daily.usuario.domain;
 
+import com.reminder.daily.handler.APIException;
 import com.reminder.daily.usuario.application.api.UsuarioNovoRequest;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.http.HttpStatus;
 
 
 import javax.validation.constraints.Email;
@@ -27,5 +29,10 @@ public class Usuario {
     public Usuario(UsuarioNovoRequest usuarioNovoRequest) {
         this.idUsuario =  UUID.randomUUID();
         this.email = usuarioNovoRequest.getEmail();
+    }
+
+    public void validaUsuario(UUID idUsuario){
+        if(!this.idUsuario.equals(idUsuario))
+            throw APIException.build(HttpStatus.UNAUTHORIZED, "Credencial de autenticação não é valida!");
     }
 }

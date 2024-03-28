@@ -8,4 +8,5 @@ import java.util.UUID;
 public interface UsuarioRepository {
     Usuario salva(Usuario usuario);
     Usuario buscarUsuarioPorId(UUID usuarioId);
+    Usuario buscarUsuarioPorEmail(String email);
 }
