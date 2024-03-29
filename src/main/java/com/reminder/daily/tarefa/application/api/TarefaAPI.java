@@ -1,5 +1,6 @@
 package com.reminder.daily.tarefa.application.api;
 
+import com.reminder.daily.tarefa.domain.Tarefa;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,4 +18,16 @@ public interface TarefaAPI {
     @GetMapping("/usuario/{idUsuario}")
     @ResponseStatus(code = HttpStatus.OK)
     List<TarefaResponse> getTarefasPorIdUsuario(@RequestHeader(name = "Authorization", required = true) String token, @PathVariable UUID idUsuario);
+
+    @DeleteMapping("/deletar/{idUsuario}/{idTarefa}")
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    void deletarTarefaPorId(@RequestHeader(name = "Authorization", required = true) String token, @PathVariable UUID idUsuario, @PathVariable UUID idTarefa);
+
+    @PatchMapping("/concluida/{idTarefa}")
+    @ResponseStatus(code = HttpStatus.OK)
+    void marcarTarefaConcluida(@RequestHeader(name = "Authorization", required = true) String token, @PathVariable UUID idTarefa);
+
+    @GetMapping("/{idTarefa}")
+    @ResponseStatus(code = HttpStatus.OK)
+    Tarefa getTarefa(@RequestHeader(name = "Authorization", required = true) String token, @PathVariable UUID idTarefa);
 }

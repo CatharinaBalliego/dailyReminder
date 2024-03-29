@@ -3,6 +3,7 @@ package com.reminder.daily.tarefa.application.api;
 import com.reminder.daily.config.security.service.TokenService;
 import com.reminder.daily.handler.APIException;
 import com.reminder.daily.tarefa.application.service.TarefaService;
+import com.reminder.daily.tarefa.domain.Tarefa;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -32,6 +33,30 @@ public class TarefaController implements TarefaAPI{
         List<TarefaResponse> tarefas = tarefaService.buscarTarefaPorIdUsuario(emailUsuario, idUsuario);
         log.info("[finish] TarefaController - getTarefasPorIdUsuario");
         return tarefas;
+    }
+
+    @Override
+    public void deletarTarefaPorId(String token, UUID idUsuario, UUID idTarefa) {
+        log.info("[start] TarefaController - deletarTarefaPorId");
+        String emailUsuario = getUsuarioByToken(token);
+        tarefaService.deletarTarefa(emailUsuario, idUsuario, idTarefa);
+        log.info("[finish] TarefaController - deletarTarefaPorId");
+    }
+
+    @Override
+    public void marcarTarefaConcluida(String token, UUID idTarefa) {
+        log.info("[start] TarefaController - marcarTarefaConcluida");
+        String emailUsuario = getUsuarioByToken(token);
+        tarefaService.concluirTarefa(emailUsuario, idTarefa);
+        log.info("[finish] TarefaController - marcarTarefaConcluida");
+    }
+
+    @Override
+    public Tarefa getTarefa(String token, UUID idTarefa) {
+        log.info("[start] TarefaController - getTarefa");
+        String emailUsuario = getUsuarioByToken(token);
+        tarefaService.buscarTarefaPorId(emailUsuario, idTarefa);
+        log.info("[finish] TarefaController - getTarefa");
     }
 
     private String getUsuarioByToken(String token) {

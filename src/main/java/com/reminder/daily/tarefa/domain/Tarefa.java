@@ -1,10 +1,12 @@
 package com.reminder.daily.tarefa.domain;
 
+import com.reminder.daily.handler.APIException;
 import com.reminder.daily.tarefa.application.api.TarefaRequest;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.http.HttpStatus;
 
 import javax.validation.constraints.NotBlank;
 import java.util.UUID;
@@ -33,5 +35,11 @@ public class Tarefa {
         this.idProjeto = tarefaRequest.getIdProjeto();
     }
 
-
+    public void validarUsuario(UUID idUsuario){
+        if(!this.idUsuario.equals(idUsuario))
+            throw APIException.build(HttpStatus.UNAUTHORIZED, "Tarefa não pertence ao usuario!");
+    }
+    public void marcarTarefaConcluida(){
+        this.status = StatusTarefa.CONCLUIDA;
+    }
 }
