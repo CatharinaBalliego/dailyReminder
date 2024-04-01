@@ -52,11 +52,12 @@ public class TarefaController implements TarefaAPI{
     }
 
     @Override
-    public Tarefa getTarefa(String token, UUID idTarefa) {
+    public TarefaResponse getTarefa(String token, UUID idTarefa) {
         log.info("[start] TarefaController - getTarefa");
         String emailUsuario = getUsuarioByToken(token);
-        tarefaService.buscarTarefaPorId(emailUsuario, idTarefa);
+        Tarefa tarefa = tarefaService.buscarTarefaPorId(emailUsuario, idTarefa);
         log.info("[finish] TarefaController - getTarefa");
+        return new TarefaResponse(tarefa);
     }
 
     private String getUsuarioByToken(String token) {

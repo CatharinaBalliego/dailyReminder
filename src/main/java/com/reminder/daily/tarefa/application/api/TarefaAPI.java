@@ -29,5 +29,5 @@ public interface TarefaAPI {
 
     @GetMapping("/{idTarefa}")
     @ResponseStatus(code = HttpStatus.OK)
-    Tarefa getTarefa(@RequestHeader(name = "Authorization", required = true) String token, @PathVariable UUID idTarefa);
+    TarefaResponse getTarefa(@RequestHeader(name = "Authorization", required = true) String token, @PathVariable UUID idTarefa);
 }
