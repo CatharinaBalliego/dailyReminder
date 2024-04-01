@@ -12,7 +12,7 @@ import javax.validation.Valid;
 public interface AutenticacaoAPI {
 
     @PostMapping
-    TokenResponse autetica(@RequestBody @Valid AutenticacaoRequest autenticacaoRequest) throws AuthenticationException;
+    TokenResponse autentica(@RequestBody @Valid AutenticacaoRequest autenticacaoRequest) throws AuthenticationException;
     @PostMapping("/reativacao")
     TokenResponse reativaAuteticacao(@RequestHeader("Authorization") String tokenExpirado) throws AuthenticationException;
 
