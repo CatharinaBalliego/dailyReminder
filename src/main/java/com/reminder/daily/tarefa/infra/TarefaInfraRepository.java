@@ -1,6 +1,7 @@
 package com.reminder.daily.tarefa.infra;
 
 import com.reminder.daily.handler.APIException;
+import com.reminder.daily.tarefa.application.api.TarefaResponse;
 import com.reminder.daily.tarefa.application.repository.TarefaRepository;
 import com.reminder.daily.tarefa.domain.Tarefa;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Repository
@@ -56,6 +58,16 @@ public class TarefaInfraRepository implements TarefaRepository {
         Optional<Tarefa> tarefa = tarefaSpringMongoDBRepository.findById(idTarefa);
         log.info("[finish] TarefaInfraRepository - buscarTarefaPorId");
         return tarefa;
+    }
+
+    @Override
+    public void resetarTodasTarefas() {
+        log.info("[start] TarefaInfraRepository - resetarTodasTarefas");
+        List<Tarefa> tarefas = tarefaSpringMongoDBRepository.findAll();
+        tarefas.stream().forEach(Tarefa::resetar);
+
+        tarefaSpringMongoDBRepository.saveAll(tarefas);
+        log.info("[finish] TarefaInfraRepository - resetarTodasTarefas");
     }
 
 }
