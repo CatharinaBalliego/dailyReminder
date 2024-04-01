@@ -37,4 +37,12 @@ public class UsuarioApplicationService implements UsuarioService{
         return new UsuarioNovoResponse(usuario);
     }
 
+    @Override
+    public void validarUsuario(String emailUsuario, UUID idUsuario) {
+        Usuario usuarioToken = usuarioRepository.buscarUsuarioPorEmail(emailUsuario);
+        Usuario usuario = usuarioRepository.buscarUsuarioPorId(idUsuario);
+        usuario.validaUsuario(usuarioToken.getIdUsuario());
+    }
+
+
 }

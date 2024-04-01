@@ -7,6 +7,7 @@ import com.reminder.daily.tarefa.application.api.TarefaResponse;
 import com.reminder.daily.tarefa.application.repository.TarefaRepository;
 import com.reminder.daily.tarefa.domain.Tarefa;
 import com.reminder.daily.usuario.application.repository.UsuarioRepository;
+import com.reminder.daily.usuario.application.service.UsuarioService;
 import com.reminder.daily.usuario.domain.Usuario;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -23,6 +24,7 @@ import java.util.UUID;
 public class TarefaApplicationService implements TarefaService{
     private final TarefaRepository tarefaRepository;
     private final UsuarioRepository usuarioRepository;
+    private final UsuarioService usuarioService;
     @Override
     public TarefaIdResponse salvarTarefa(@Valid TarefaRequest tarefaRequest) {
         log.info("[start] TarefaApplicationService - salvaTarefa");
@@ -34,9 +36,7 @@ public class TarefaApplicationService implements TarefaService{
     @Override
     public List<TarefaResponse> buscarTarefaPorIdUsuario(String emailUsuario, UUID idUsuario) {
         log.info("[start] TarefaApplicationService - buscarTarefaPorIdUsuario");
-        Usuario usuarioToken = usuarioRepository.buscarUsuarioPorEmail(emailUsuario);
-        Usuario usuario = usuarioRepository.buscarUsuarioPorId(idUsuario);
-        usuario.validaUsuario(usuarioToken.getIdUsuario());
+        usuarioService.validarUsuario(emailUsuario, idUsuario);
         List<Tarefa> tarefas = tarefaRepository.buscarTodasTarefasDoUsuario(idUsuario);
         log.info("[finish] TarefaApplicationService - buscarTarefaPorIdUsuario");
         return TarefaResponse.converte(tarefas);
@@ -45,9 +45,7 @@ public class TarefaApplicationService implements TarefaService{
     @Override
     public void deletarTarefa(String emailUsuario, UUID idUsuario, UUID idTarefa) {
         log.info("[start] TarefaApplicationService - deletarTarefa");
-        Usuario usuarioToken = usuarioRepository.buscarUsuarioPorEmail(emailUsuario);
-        Usuario usuario = usuarioRepository.buscarUsuarioPorId(idUsuario);
-        usuario.validaUsuario(usuarioToken.getIdUsuario());
+        usuarioService.validarUsuario(emailUsuario, idUsuario);
         buscarTarefaPorId(emailUsuario, idTarefa);
         tarefaRepository.deletarTarefa(idTarefa);
         log.info("[finish] TarefaApplicationService - deletarTarefa");
