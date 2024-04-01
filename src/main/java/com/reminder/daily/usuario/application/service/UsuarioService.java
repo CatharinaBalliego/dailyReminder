@@ -8,4 +8,6 @@ import java.util.UUID;
 public interface UsuarioService {
     UsuarioNovoResponse salvarUsuario(UsuarioNovoRequest usuario);
     UsuarioNovoResponse buscarUsuarioPorId(UUID idUsuario);
+
+    void validarUsuario(String emailUsuario, UUID idUsuario);
 }
