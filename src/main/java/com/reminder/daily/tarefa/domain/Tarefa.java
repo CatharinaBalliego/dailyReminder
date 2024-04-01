@@ -31,7 +31,7 @@ public class Tarefa {
         this.idTarefa = UUID.randomUUID();
         this.descricao = tarefaRequest.getDescricao();
         this.idUsuario = tarefaRequest.getIdUsuario();
-        this.status = tarefaRequest.getStatus();
+        this.status = StatusTarefa.A_FAZER;
         this.idProjeto = tarefaRequest.getIdProjeto();
     }
 
