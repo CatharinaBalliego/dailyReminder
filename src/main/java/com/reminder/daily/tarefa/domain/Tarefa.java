@@ -42,4 +42,6 @@ public class Tarefa {
     public void marcarTarefaConcluida(){
         this.status = StatusTarefa.CONCLUIDA;
     }
+
+    public void resetar() { this.status = StatusTarefa.A_FAZER; }
 }

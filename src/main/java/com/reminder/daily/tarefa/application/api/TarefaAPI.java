@@ -27,6 +27,10 @@ public interface TarefaAPI {
     @ResponseStatus(code = HttpStatus.OK)
     void marcarTarefaConcluida(@RequestHeader(name = "Authorization", required = true) String token, @PathVariable UUID idTarefa);
 
+    @PatchMapping("/pendente/{idTarefa}")
+    @ResponseStatus(code = HttpStatus.OK)
+    void marcarTarefaPendente(@RequestHeader(name = "Authorization", required = true) String token, @PathVariable UUID idTarefa);
+
     @GetMapping("/{idTarefa}")
     @ResponseStatus(code = HttpStatus.OK)
     TarefaResponse getTarefa(@RequestHeader(name = "Authorization", required = true) String token, @PathVariable UUID idTarefa);

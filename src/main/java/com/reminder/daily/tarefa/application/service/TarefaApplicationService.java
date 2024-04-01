@@ -73,4 +73,13 @@ public class TarefaApplicationService implements TarefaService{
         log.info("[finish] TarefaApplicationService - buscarTarefaPorId");
         return tarefa;
     }
+
+    @Override
+    public void resetarTarefa(String emailUsuario, UUID idTarefa) {
+        log.info("[start] TarefaApplicationService - concluirTarefa");
+        Tarefa tarefa = buscarTarefaPorId(emailUsuario, idTarefa);
+        tarefa.resetar();
+        tarefaRepository.salva(tarefa);
+        log.info("[finish] TarefaApplicationService - concluirTarefa");
+    }
 }

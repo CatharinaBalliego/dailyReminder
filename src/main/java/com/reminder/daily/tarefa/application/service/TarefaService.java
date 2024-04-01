@@ -15,5 +15,6 @@ public interface TarefaService {
     void deletarTarefa(String email, UUID idUsuario, UUID idTarefa);
     void concluirTarefa(String emailUsuario, UUID idTarefa);
     Tarefa buscarTarefaPorId(String emailUsuario, UUID idTarefa);
+    void resetarTarefa(String token, UUID idTarefa);
 
 }
