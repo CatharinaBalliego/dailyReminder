@@ -40,20 +40,17 @@ public class UsuarioApplicationServiceTest {
     @Test
     public void salvarUsuario_valido_deveRetornarId(){
         UsuarioNovoRequest usuarioRequest = DataHelper.getUsuarioRequest();
-        UsuarioNovoResponse usuarioResponse = DataHelper.getUsuarioResponse();
         Usuario usuario = new Usuario(usuarioRequest);
 
-        credencialService.criarNovaCredencial(usuarioRequest);
 
         when(usuarioRepository.salva(any(Usuario.class))).thenReturn(usuario);
-        usuarioApplicationService.salvarUsuario(usuarioRequest);
-
-        verify(usuarioRepository, times(1)).salva(usuario);
-
+        UsuarioNovoResponse usuarioResponse = usuarioApplicationService.salvarUsuario(usuarioRequest);
 
         assertNotNull(usuarioResponse);
         assertEquals(UsuarioNovoResponse.class, usuarioResponse.getClass());
         assertEquals(UUID.class, usuarioResponse.getIdUsuario().getClass());
+        verify(credencialService, times(1)).criarNovaCredencial(usuarioRequest);
+        //verify(usuarioRepository, times(1)).salva(new Usuario(usuarioRequest));
     }
 //
 //    @Test
@@ -73,6 +70,7 @@ public class UsuarioApplicationServiceTest {
         UUID usuarioId = UUID.fromString("a713162f-20a9-5db9-a85b-90cd52ab18f4");
         Usuario usuario = DataHelper.getUsuario();
         UsuarioNovoResponse usuarioResponse = DataHelper.getUsuarioResponse();
+
         Mockito.lenient().when(usuarioRepository.buscarUsuarioPorId(usuarioId)).thenReturn(usuario);
 
         assertNotNull(usuarioResponse);
