@@ -7,6 +7,7 @@ import com.reminder.daily.usuario.application.api.UsuarioNovoRequest;
 import com.reminder.daily.usuario.application.api.UsuarioNovoResponse;
 import com.reminder.daily.usuario.application.repository.UsuarioRepository;
 import com.reminder.daily.usuario.domain.Usuario;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,6 +16,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,9 +25,8 @@ import static org.mockito.ArgumentMatchers.any;
 
 //
 
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -78,17 +79,16 @@ public class UsuarioApplicationServiceTest {
         assertEquals(UUID.class, usuarioResponse.getIdUsuario().getClass());
     }
 
+
     @Test
     public void buscarUsuarioPorId_idInvalido_NotFound(){
-        Usuario usuario = DataHelper.getUsuario();
+        UUID usuarioId = UUID.randomUUID();
 
-       // when(usuarioRepository.buscarUsuarioPorId(eq(usuarioId))).thenThrow(APIException.class);
-        when(usuarioRepository.buscarUsuarioPorId(any())).thenReturn(usuario);
+        when(usuarioRepository.buscarUsuarioPorId(any(UUID.class)))
+                .thenThrow(APIException.build(HttpStatus.NOT_FOUND,"Usuario não encontrado!"));
 
-        //doThrow(APIException.class).when(usuarioRepository.buscarUsuarioPorId(any()));
-
-        APIException exception = assertThrows(APIException.class,
-                () -> usuarioApplicationService.buscarUsuarioPorId(UUID.randomUUID()));
+        APIException exception = Assertions.assertThrows(APIException.class,
+                () -> usuarioApplicationService.buscarUsuarioPorId(usuarioId));
 
         assertEquals("Usuario não encontrado!", exception.getMessage());
         assertEquals(HttpStatus.NOT_FOUND, exception.getStatusException());
