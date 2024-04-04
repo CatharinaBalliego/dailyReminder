@@ -10,6 +10,7 @@ import com.reminder.daily.tarefa.domain.Tarefa;
 import com.reminder.daily.usuario.application.repository.UsuarioRepository;
 import com.reminder.daily.usuario.application.service.UsuarioService;
 import com.reminder.daily.usuario.domain.Usuario;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -59,7 +60,17 @@ public class TarefaApplicationServiceTest {
 
     @Test
     public void buscarTarefaPorIdUsuario_tokenInvalido_Unauthorized(){
+        UUID idUsuario = UUID.randomUUID();
+        String email = "teste@teste.com";
 
+        doThrow(APIException.build(HttpStatus.UNAUTHORIZED,"Credencial de autenticação nao é valida!"))
+                .when(usuarioService).validarUsuario(email, idUsuario);
+
+        APIException exception = Assertions.assertThrows(APIException.class,
+                () -> tarefaApplicationService.buscarTarefaPorIdUsuario(email, idUsuario));
+
+        assertEquals("Credencial de autenticação nao é valida!", exception.getMessage());
+        assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatusException());
     }
 
     @Test
@@ -68,6 +79,7 @@ public class TarefaApplicationServiceTest {
         String email = "teste@teste.com";
         List<Tarefa> tarefasDoUsuario = DataHelper.getTarefasDoUsuario(idUsuario);
 
+        //usuarioService.validarUsuario(email, idUsuario);
         when(tarefaRepository.buscarTodasTarefasDoUsuario(idUsuario)).thenReturn(tarefasDoUsuario);
 
         List<TarefaResponse> tarefaResponseList = tarefaApplicationService.buscarTarefaPorIdUsuario(email, idUsuario);
