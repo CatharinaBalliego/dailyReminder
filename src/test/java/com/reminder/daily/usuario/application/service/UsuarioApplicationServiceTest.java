@@ -53,14 +53,14 @@ public class UsuarioApplicationServiceTest {
         verify(credencialService, times(1)).criarNovaCredencial(usuarioRequest);
         //verify(usuarioRepository, times(1)).salva(new Usuario(usuarioRequest));
     }
-//
+
 //    @Test
 //    public void salvarUsuario_emailDuplicado_Conflict(){
-//        Usuario usuario = DataHelper.criarUsuario();
-//        UsuarioNovoRequest usuarioNovoRequest = DataHelper.criarUsuarioRequest();
+//        Usuario usuario = DataHelper.getUsuario();
+//        UsuarioNovoRequest usuarioNovoRequest = DataHelper.getUsuarioRequest();
 //        when(usuarioRepository.salva(usuario)).thenThrow(APIException.class);
 //        //when(usuarioRepository.salva(usuario)).thenThrow(MongoWriteException.class);
-//        APIException exception = assertThrows(APIException.class,
+//        APIException exception = Assertions.assertThrows(APIException.class,
 //                () -> usuarioApplicationService.salvarUsuario(usuarioNovoRequest));
 //        assertEquals("Usuario já está cadastrado no sistema!",exception.getMessage());
 //
@@ -95,5 +95,36 @@ public class UsuarioApplicationServiceTest {
     }
 
 
-    //Validar usuario
+    @Test
+    public void validarUsuario_tokenValido_Unauthorized(){
+        UUID usuarioId = UUID.randomUUID();
+        String emailUsuario = "teste@teste.com";
+        Usuario usuarioToken = DataHelper.getUsuario();
+        Usuario usuario = DataHelper.getUsuario();
+
+        when(usuarioRepository.buscarUsuarioPorEmail(emailUsuario)).thenReturn(usuarioToken);
+        when(usuarioRepository.buscarUsuarioPorId(usuarioId)).thenReturn(usuario);
+
+        usuarioApplicationService.validarUsuario(emailUsuario, usuarioId);
+        usuario.validaUsuario(usuarioToken.getIdUsuario());
+
+        assertEquals(usuarioToken.getIdUsuario(), usuario.getIdUsuario());
+    }
+
+    @Test
+    public void validarUsuario_tokeInValido_Unauthorized(){
+        UUID usuarioId = UUID.randomUUID();
+        String emailUsuario = "teste@teste.com";
+        Usuario usuarioToken = DataHelper.getUsuario();
+        Usuario usuario = DataHelper.getUsuario();
+
+        when(usuarioRepository.buscarUsuarioPorEmail(any(String.class)))
+                .thenThrow(APIException.build(HttpStatus.UNAUTHORIZED,"Credencial de autenticação não é valida!"));
+
+
+        APIException exception = assertThrows(APIException.class,
+                () -> usuarioApplicationService.validarUsuario(emailUsuario, usuarioId));
+        assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatusException());
+        assertEquals("Credencial de autenticação não é valida!", exception.getMessage());
+    }
 }
