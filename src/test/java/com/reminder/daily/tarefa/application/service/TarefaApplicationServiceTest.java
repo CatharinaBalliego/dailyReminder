@@ -124,21 +124,17 @@ public class TarefaApplicationServiceTest {
 
     @Test
     public void deletarTarefa_tokenValido_OK(){
-        String email = "teste@teste.com";
-        UUID idTarefa = UUID.randomUUID();
-        UUID idUsuario = UUID.randomUUID();
         Usuario usuarioToken = DataHelper.getUsuario();
         Tarefa tarefa = DataHelper.criarTarefaAFazer();
 
-        usuarioService.validarUsuario(email, idUsuario);
+        when(usuarioRepository.buscarUsuarioPorEmail(usuarioToken.getEmail())).thenReturn(usuarioToken);
+        when(tarefaRepository.buscarTarefaPorId((tarefa.getIdTarefa()))).thenReturn(Optional.of(tarefa));
 
-        when(usuarioRepository.buscarUsuarioPorEmail(email)).thenReturn(usuarioToken);
-        when(tarefaRepository.buscarTarefaPorId(idTarefa)).thenReturn(Optional.of(tarefa));
-       // tarefa.validarUsuario(usuarioToken.getIdUsuario());
+        tarefa.validarUsuario(usuarioToken.getIdUsuario());
         tarefaApplicationService.deletarTarefa(usuarioToken.getEmail(), usuarioToken.getIdUsuario(), tarefa.getIdTarefa());
 
-        verify(tarefa, times(1)).validarUsuario(any(UUID.class));
         verify(usuarioService, times(1)).validarUsuario(any(String.class), any(UUID.class));
+        verify(tarefaRepository, times(1)).deletarTarefa(any(UUID.class));
     }
 
     @Test

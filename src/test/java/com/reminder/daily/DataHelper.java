@@ -29,10 +29,10 @@ public class DataHelper {
     }
 
     public static Tarefa criarTarefaAFazer(){
-        return Tarefa.builder().idTarefa(idTarefa).status(StatusTarefa.A_FAZER).build();
+        return Tarefa.builder().idTarefa(idTarefa).idUsuario(usuario1).status(StatusTarefa.A_FAZER).build();
     }
     public static Tarefa criarTarefaConcluida(){
-        return Tarefa.builder().idTarefa(idTarefa).status(StatusTarefa.CONCLUIDA).build();
+        return Tarefa.builder().idTarefa(idTarefa).idUsuario(usuario1).status(StatusTarefa.CONCLUIDA).build();
     }
 
     public static TarefaRequest getTarefaRequest(){
