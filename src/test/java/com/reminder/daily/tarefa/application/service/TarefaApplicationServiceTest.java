@@ -37,19 +37,20 @@ public class TarefaApplicationServiceTest {
     @Mock
     TarefaRepository tarefaRepository;
     @Mock
-    UsuarioRepository usuarioRepository;
-    @Mock
     UsuarioService usuarioService;
+    @Mock
+    UsuarioRepository usuarioRepository;
 
     @Test
     public void salvarTarefa_valida_deveRetornarId(){
         Tarefa tarefa = DataHelper.criarTarefaAFazer();
         TarefaRequest tarefaRequest = DataHelper.getTarefaRequest();
         Tarefa tarefaResponse = DataHelper.criarTarefaAFazer();
+        String email = "teste@teste.com";
 
-        //when(tarefaRepository.salva(tarefa)).thenReturn(tarefaResponse);
-        tarefaApplicationService.salvarTarefa(tarefaRequest);
-       // verify(usuarioService, times(1)).validarUsuario();
+        when(tarefaRepository.salva(any(Tarefa.class))).thenReturn(tarefaResponse);
+        tarefaApplicationService.salvarTarefa(email, tarefaRequest);
+        verify(usuarioService, times(1)).validarUsuario(email, tarefaRequest.getIdUsuario());
         assertEquals(tarefaResponse.getIdTarefa(), tarefa.getIdTarefa());
     }
 
@@ -111,10 +112,17 @@ public class TarefaApplicationServiceTest {
         String email = "teste@teste.com";
         UUID idTarefa = UUID.randomUUID();
         UUID idUsuario = UUID.randomUUID();
+        Usuario usuario = DataHelper.getUsuario();
+        Tarefa tarefa = DataHelper.criarTarefaAFazer();
 
+        usuarioService.validarUsuario(email, idUsuario);
 
+        when(usuarioRepository.buscarUsuarioPorEmail(email)).thenReturn(usuario);
+        when(tarefaApplicationService.buscarTarefaPorId(email, idTarefa)).thenReturn(tarefa);
 
-       // verify()
+        tarefaApplicationService.deletarTarefa(email, idUsuario, idTarefa);
+
+        verify(usuarioService, times(1)).validarUsuario(email, idUsuario);
     }
 
     @Test
