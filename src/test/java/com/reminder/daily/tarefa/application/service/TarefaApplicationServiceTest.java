@@ -157,6 +157,18 @@ public class TarefaApplicationServiceTest {
     }
     @Test
     public void concluirTarefa_tokenValido_OK() {
+        String email = "teste@teste.com";
+        Usuario usuariotoken = DataHelper.getUsuario();
+        Tarefa tarefa = DataHelper.criarTarefaAFazer();
+
+        when(usuarioRepository.buscarUsuarioPorEmail(email)).thenReturn(usuariotoken);
+        when(tarefaRepository.buscarTarefaPorId(tarefa.getIdTarefa())).thenReturn(Optional.of(tarefa));
+        tarefaApplicationService.concluirTarefa(email, tarefa.getIdTarefa());
+        tarefa.marcarTarefaConcluida();
+
+        verify(tarefaRepository, times(1)).salva(tarefa);
+        assertEquals(StatusTarefa.CONCLUIDA, tarefa.getStatus());
+
 
     }
     @Test
