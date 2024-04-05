@@ -101,6 +101,7 @@ public class TarefaApplicationServiceTest {
         APIException exception = Assertions.assertThrows(APIException.class,
                 () -> tarefaApplicationService.deletarTarefa(email, idUsuario, idTarefaInvalido));
 
+        verify(usuarioService, times(1)).validarUsuario(email, idUsuario);
         assertEquals("Credencial de autenticação não é valida!", exception.getMessage());
         verify(tarefaRepository, never()).deletarTarefa(idTarefaInvalido);
     }
@@ -109,7 +110,11 @@ public class TarefaApplicationServiceTest {
     public void deletarTarefa_tokenValido_OK(){
         String email = "teste@teste.com";
         UUID idTarefa = UUID.randomUUID();
+        UUID idUsuario = UUID.randomUUID();
 
+
+
+       // verify()
     }
 
     @Test
