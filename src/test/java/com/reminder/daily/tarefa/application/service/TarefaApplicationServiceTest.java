@@ -156,7 +156,7 @@ public class TarefaApplicationServiceTest {
 
     }
     @Test
-    public void concluirTarefa_tokenValido_OK() {
+    public void concluirTarefa_idTarefaValido_OK() {
         String email = "teste@teste.com";
         Usuario usuariotoken = DataHelper.getUsuario();
         Tarefa tarefa = DataHelper.criarTarefaAFazer();
@@ -170,11 +170,35 @@ public class TarefaApplicationServiceTest {
         assertEquals(StatusTarefa.CONCLUIDA, tarefa.getStatus());
     }
     @Test
-    public void buscarTarefaPorId_idtarefaInvalida_NotFound() {
+    public void buscarTarefaPorId_idTarefaInvalida_NotFound() {
+        String email = "teste@teste.com";
+        Usuario usuarioToken = DataHelper.getUsuario();
+        Tarefa tarefa = DataHelper.criarTarefaAFazer();
 
+        when(usuarioRepository.buscarUsuarioPorEmail(email)).thenReturn(usuarioToken);
+
+        doThrow(APIException.build(HttpStatus.NOT_FOUND, "Tarefa não encontrada!"))
+                .when(tarefaRepository).buscarTarefaPorId(tarefa.getIdTarefa());
+
+        APIException exception = Assertions.assertThrows(APIException.class,
+                () -> tarefaApplicationService.buscarTarefaPorId(email, tarefa.getIdTarefa()));
+
+        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusException());
+        assertEquals("Tarefa não encontrada!", exception.getMessage());
     }
     @Test
     public void buscarTarefaPorId_idTarefaValido_retornarTarefa() {
+        String email = "teste@teste.com";
+        Usuario usuarioToken = DataHelper.getUsuario();
+        Tarefa tarefa = DataHelper.criarTarefaAFazer();
+
+        when(usuarioRepository.buscarUsuarioPorEmail(email)).thenReturn(usuarioToken);
+        when(tarefaRepository.buscarTarefaPorId(tarefa.getIdTarefa())).thenReturn(Optional.of(tarefa));
+
+        tarefaApplicationService.buscarTarefaPorId(usuarioToken.getEmail(), tarefa.getIdTarefa());
+        tarefa.validarUsuario(usuarioToken.getIdUsuario());
+
+        assertEquals(usuarioToken.getIdUsuario(), tarefa.getIdUsuario());
 
     }
     @Test
