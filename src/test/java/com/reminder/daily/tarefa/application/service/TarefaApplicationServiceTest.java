@@ -6,6 +6,7 @@ import com.reminder.daily.tarefa.application.api.TarefaIdResponse;
 import com.reminder.daily.tarefa.application.api.TarefaRequest;
 import com.reminder.daily.tarefa.application.api.TarefaResponse;
 import com.reminder.daily.tarefa.application.repository.TarefaRepository;
+import com.reminder.daily.tarefa.domain.StatusTarefa;
 import com.reminder.daily.tarefa.domain.Tarefa;
 import com.reminder.daily.usuario.application.repository.UsuarioRepository;
 import com.reminder.daily.usuario.application.service.UsuarioService;
@@ -52,6 +53,7 @@ public class TarefaApplicationServiceTest {
         tarefaApplicationService.salvarTarefa(email, tarefaRequest);
         verify(usuarioService, times(1)).validarUsuario(email, tarefaRequest.getIdUsuario());
         assertEquals(tarefaResponse.getIdTarefa(), tarefa.getIdTarefa());
+        assertEquals(tarefaResponse.getStatus(), StatusTarefa.A_FAZER);
     }
 
     @Test
@@ -115,6 +117,7 @@ public class TarefaApplicationServiceTest {
                 () -> tarefaApplicationService.deletarTarefa(email, idUsuario, idTarefaInvalido));
 
         verify(usuarioService, times(1)).validarUsuario(email, idUsuario);
+        assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatusException());
         assertEquals("Credencial de autenticação não é valida!", exception.getMessage());
         verify(tarefaRepository, never()).deletarTarefa(idTarefaInvalido);
     }
@@ -124,21 +127,36 @@ public class TarefaApplicationServiceTest {
         String email = "teste@teste.com";
         UUID idTarefa = UUID.randomUUID();
         UUID idUsuario = UUID.randomUUID();
-        Usuario usuario = DataHelper.getUsuario();
+        Usuario usuarioToken = DataHelper.getUsuario();
         Tarefa tarefa = DataHelper.criarTarefaAFazer();
 
         usuarioService.validarUsuario(email, idUsuario);
 
-        when(usuarioRepository.buscarUsuarioPorEmail(email)).thenReturn(usuario);
-        when(tarefaApplicationService.buscarTarefaPorId(email, idTarefa)).thenReturn(tarefa);
+        when(usuarioRepository.buscarUsuarioPorEmail(email)).thenReturn(usuarioToken);
+        when(tarefaRepository.buscarTarefaPorId(idTarefa)).thenReturn(Optional.of(tarefa));
+       // tarefa.validarUsuario(usuarioToken.getIdUsuario());
+        tarefaApplicationService.deletarTarefa(usuarioToken.getEmail(), usuarioToken.getIdUsuario(), tarefa.getIdTarefa());
 
-        tarefaApplicationService.deletarTarefa(email, idUsuario, idTarefa);
-
-        verify(usuarioService, times(1)).validarUsuario(email, idUsuario);
+        verify(tarefa, times(1)).validarUsuario(any(UUID.class));
+        verify(usuarioService, times(1)).validarUsuario(any(String.class), any(UUID.class));
     }
 
     @Test
-    public void concluirTarefa_tokenInvalido_Unauthorized() {
+    public void concluirTarefa_idTarefaInvalido_NotFound() {
+        String email = "teste@teste.com";
+        Usuario usuariotoken = DataHelper.getUsuario();
+        Tarefa tarefa = DataHelper.criarTarefaAFazer();
+
+        when(usuarioRepository.buscarUsuarioPorEmail(email)).thenReturn(usuariotoken);
+
+        doThrow(APIException.build(HttpStatus.NOT_FOUND, "Tarefa não encontrada!"))
+                .when(tarefaRepository).buscarTarefaPorId(tarefa.getIdTarefa());
+
+        APIException exception = Assertions.assertThrows(APIException.class,
+                () -> tarefaApplicationService.concluirTarefa(email, tarefa.getIdTarefa()));
+
+        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusException());
+        assertEquals("Tarefa não encontrada!", exception.getMessage());
 
     }
     @Test
