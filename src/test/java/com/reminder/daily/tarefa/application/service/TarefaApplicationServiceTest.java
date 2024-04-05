@@ -56,7 +56,19 @@ public class TarefaApplicationServiceTest {
 
     @Test
     public void salvarTarefa_tokenInvalido_deveRetornarErro() {
+        Tarefa tarefa = DataHelper.criarTarefaAFazer();
+        TarefaRequest tarefaRequest = DataHelper.getTarefaRequest();
+        String email = "teste@teste.com";
 
+        doThrow(APIException.build(HttpStatus.UNAUTHORIZED,"Credencial de autenticação não é valida!"))
+                .when(usuarioService).validarUsuario(email, tarefaRequest.getIdUsuario());
+
+        APIException exception = Assertions.assertThrows(APIException.class,
+                () -> tarefaApplicationService.salvarTarefa(email, tarefaRequest));
+
+        verify(tarefaRepository, never()).salva(tarefa);
+        assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatusException());
+        assertEquals("Credencial de autenticação não é valida!", exception.getMessage());
     }
 
     @Test
