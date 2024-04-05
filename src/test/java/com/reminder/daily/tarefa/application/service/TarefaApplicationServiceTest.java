@@ -168,8 +168,6 @@ public class TarefaApplicationServiceTest {
 
         verify(tarefaRepository, times(1)).salva(tarefa);
         assertEquals(StatusTarefa.CONCLUIDA, tarefa.getStatus());
-
-
     }
     @Test
     public void buscarTarefaPorId_idtarefaInvalida_NotFound() {
@@ -180,11 +178,36 @@ public class TarefaApplicationServiceTest {
 
     }
     @Test
-    public void resetarTarefa_tokenInvalido_Unauthorized() {
+    public void resetarTarefa_idTarefaInvalido_NotFound() {
+        String email = "teste@teste.com";
+        Usuario usuariotoken = DataHelper.getUsuario();
+        Tarefa tarefa = DataHelper.criarTarefaAFazer();
+
+        when(usuarioRepository.buscarUsuarioPorEmail(email)).thenReturn(usuariotoken);
+
+        doThrow(APIException.build(HttpStatus.NOT_FOUND, "Tarefa não encontrada!"))
+                .when(tarefaRepository).buscarTarefaPorId(tarefa.getIdTarefa());
+
+        APIException exception = Assertions.assertThrows(APIException.class,
+                () -> tarefaApplicationService.resetarTarefa(email, tarefa.getIdTarefa()));
+
+        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusException());
+        assertEquals("Tarefa não encontrada!", exception.getMessage());
 
     }
     @Test
     public void resetarTarefa_tokenValido_OK () {
+        String email = "teste@teste.com";
+        Usuario usuariotoken = DataHelper.getUsuario();
+        Tarefa tarefa = DataHelper.criarTarefaAFazer();
+
+        when(usuarioRepository.buscarUsuarioPorEmail(email)).thenReturn(usuariotoken);
+        when(tarefaRepository.buscarTarefaPorId(tarefa.getIdTarefa())).thenReturn(Optional.of(tarefa));
+        tarefaApplicationService.resetarTarefa(email, tarefa.getIdTarefa());
+        tarefa.resetar();
+
+        verify(tarefaRepository, times(1)).salva(tarefa);
+        assertEquals(StatusTarefa.A_FAZER, tarefa.getStatus());
 
     }
 }
