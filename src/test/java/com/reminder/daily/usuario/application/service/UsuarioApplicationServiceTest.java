@@ -74,7 +74,7 @@ public class UsuarioApplicationServiceTest {
 
         Mockito.lenient().when(usuarioRepository.buscarUsuarioPorId(usuarioId)).thenReturn(usuario);
 
-
+        usuarioApplicationService.buscarUsuarioPorId(usuarioId);
         assertEquals(usuario.getIdUsuario(), usuarioResponse.getIdUsuario());
     }
 
