@@ -12,4 +12,5 @@ public interface TarefaRepository {
     void deletarTarefa(UUID idTarefa);
     void concluirTarefa(UUID idTarefa);
     Optional<Tarefa> buscarTarefaPorId(UUID idTarefa);
+    void resetarTodasTarefas();
 }

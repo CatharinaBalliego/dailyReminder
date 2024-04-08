@@ -8,4 +8,5 @@ import java.util.UUID;
 
 public interface TarefaSpringMongoDBRepository extends MongoRepository<Tarefa, UUID> {
     List<Tarefa> findAllByIdUsuario(UUID idUsuario);
+
 }
