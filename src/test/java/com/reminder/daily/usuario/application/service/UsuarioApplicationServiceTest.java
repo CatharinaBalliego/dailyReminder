@@ -74,9 +74,8 @@ public class UsuarioApplicationServiceTest {
 
         Mockito.lenient().when(usuarioRepository.buscarUsuarioPorId(usuarioId)).thenReturn(usuario);
 
-        assertNotNull(usuarioResponse);
-        assertEquals(UsuarioNovoResponse.class, usuarioResponse.getClass());
-        assertEquals(UUID.class, usuarioResponse.getIdUsuario().getClass());
+
+        assertEquals(usuario.getIdUsuario(), usuarioResponse.getIdUsuario());
     }
 
 
@@ -115,12 +114,9 @@ public class UsuarioApplicationServiceTest {
     public void validarUsuario_tokeInValido_Unauthorized(){
         UUID usuarioId = UUID.randomUUID();
         String emailUsuario = "teste@teste.com";
-        Usuario usuarioToken = DataHelper.getUsuario();
-        Usuario usuario = DataHelper.getUsuario();
 
         when(usuarioRepository.buscarUsuarioPorEmail(any(String.class)))
                 .thenThrow(APIException.build(HttpStatus.UNAUTHORIZED,"Credencial de autenticação não é valida!"));
-
 
         APIException exception = assertThrows(APIException.class,
                 () -> usuarioApplicationService.validarUsuario(emailUsuario, usuarioId));
