@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface TarefaService {
-    TarefaIdResponse salvarTarefa(@Valid TarefaRequest tarefaRequest);
+    TarefaIdResponse salvarTarefa(String email, @Valid TarefaRequest tarefaRequest);
     List<TarefaResponse> buscarTarefaPorIdUsuario(String emailUsuario, UUID idUsuario);
     void deletarTarefa(String email, UUID idUsuario, UUID idTarefa);
     void concluirTarefa(String emailUsuario, UUID idTarefa);

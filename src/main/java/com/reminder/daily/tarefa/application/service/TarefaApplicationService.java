@@ -26,8 +26,9 @@ public class TarefaApplicationService implements TarefaService{
     private final UsuarioRepository usuarioRepository;
     private final UsuarioService usuarioService;
     @Override
-    public TarefaIdResponse salvarTarefa(@Valid TarefaRequest tarefaRequest) {
+    public TarefaIdResponse salvarTarefa(String emailUsuario, @Valid TarefaRequest tarefaRequest) {
         log.info("[start] TarefaApplicationService - salvaTarefa");
+        usuarioService.validarUsuario(emailUsuario, tarefaRequest.getIdUsuario());
         Tarefa tarefa = tarefaRepository.salva(new Tarefa(tarefaRequest));
         log.info("[finish] TarefaApplicationService - salvaTarefa");
         return TarefaIdResponse.builder().idTarefa(tarefa.getIdTarefa()).build();

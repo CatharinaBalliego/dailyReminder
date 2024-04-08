@@ -19,9 +19,10 @@ public class TarefaController implements TarefaAPI{
     private final TarefaService tarefaService;
     private final TokenService tokenService;
     @Override
-    public TarefaIdResponse postNovaTarefa(TarefaRequest tarefaRequest) {
+    public TarefaIdResponse postNovaTarefa(String token, TarefaRequest tarefaRequest) {
         log.info("[start] TarefaController - postNovaTarefa");
-        TarefaIdResponse tarefaId = tarefaService.salvarTarefa(tarefaRequest);
+        String emailUsuario = getUsuarioByToken(token);
+        TarefaIdResponse tarefaId = tarefaService.salvarTarefa(emailUsuario, tarefaRequest);
         log.info("[finish] TarefaController - postNovaTarefa");
         return tarefaId;
     }

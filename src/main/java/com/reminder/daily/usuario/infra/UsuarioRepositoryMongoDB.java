@@ -28,7 +28,7 @@ public class UsuarioRepositoryMongoDB implements UsuarioRepository {
     public Usuario buscarUsuarioPorId(UUID usuarioId) {
         log.info("[start] UsuarioRepositoryMongoDB - buscarUsuarioPorId");
         Usuario usuario = usuarioMongoSpringRepository.findByIdUsuario(usuarioId)
-                        .orElseThrow(() -> APIException.build(HttpStatus.BAD_REQUEST, "Usuario não encontrado!"));
+                        .orElseThrow(() -> APIException.build(HttpStatus.NOT_FOUND, "Usuario não encontrado!"));
         log.info("[finish] UsuarioRepositoryMongoDB - buscarUsuarioPorId");
         return usuario;
     }
@@ -36,7 +36,7 @@ public class UsuarioRepositoryMongoDB implements UsuarioRepository {
     public Usuario buscarUsuarioPorEmail(String usuarioEmail){
         log.info("[start] UsuarioRepositoryMongoDB - buscarUsuarioPorEmail");
         Usuario usuario = usuarioMongoSpringRepository.findByEmail(usuarioEmail)
-                        .orElseThrow(() -> APIException.build(HttpStatus.BAD_REQUEST, "Usuario não encontrado!"));
+                        .orElseThrow(() -> APIException.build(HttpStatus.NOT_FOUND, "Usuario não encontrado!"));
         log.info("[finish] UsuarioRepositoryMongoDB - buscarUsuarioPorEmail");
         return usuario;
     }
