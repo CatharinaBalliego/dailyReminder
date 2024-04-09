@@ -65,7 +65,6 @@ public class TarefaInfraRepository implements TarefaRepository {
         log.info("[start] TarefaInfraRepository - resetarTodasTarefas");
         List<Tarefa> tarefas = tarefaSpringMongoDBRepository.findAll();
         tarefas.stream().forEach(Tarefa::resetar);
-
         tarefaSpringMongoDBRepository.saveAll(tarefas);
         log.info("[finish] TarefaInfraRepository - resetarTodasTarefas");
     }

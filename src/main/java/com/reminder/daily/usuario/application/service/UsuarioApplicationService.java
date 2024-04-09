@@ -32,7 +32,6 @@ public class UsuarioApplicationService implements UsuarioService{
     @Override
     public UsuarioNovoResponse buscarUsuarioPorId(UUID idUsuario) {
         log.info("[start] UsuarioApplicationService - buscarUsuarioPorId");
-        log.info("idUsuario: {}", idUsuario);
         Usuario usuario = usuarioRepository.buscarUsuarioPorId(idUsuario);
         log.info("[finish] UsuarioApplicationService - buscarUsuarioPorId");
         return new UsuarioNovoResponse(usuario);
@@ -40,9 +39,11 @@ public class UsuarioApplicationService implements UsuarioService{
 
     @Override
     public void validarUsuario(String emailUsuario, UUID idUsuario) {
+        log.info("[start] - UsuarioApplicationService - validarUsuario");
         Usuario usuarioToken = usuarioRepository.buscarUsuarioPorEmail(emailUsuario);
         Usuario usuario = usuarioRepository.buscarUsuarioPorId(idUsuario);
         usuario.validaUsuario(usuarioToken.getIdUsuario());
+        log.info("[finish] - UsuarioApplicationService - validarUsuario");
     }
 
 
