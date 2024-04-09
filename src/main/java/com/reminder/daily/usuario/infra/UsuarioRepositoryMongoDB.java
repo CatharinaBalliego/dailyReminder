@@ -5,6 +5,7 @@ import com.reminder.daily.usuario.application.repository.UsuarioRepository;
 import com.reminder.daily.usuario.domain.Usuario;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 
@@ -19,9 +20,14 @@ public class UsuarioRepositoryMongoDB implements UsuarioRepository {
     @Override
     public Usuario salva(Usuario usuario) {
         log.info("[start] UsuarioRepositoryMongoDB - salva");
-        Usuario novoUsuario = usuarioMongoSpringRepository.save(usuario);
-        log.info("[finish] UsuarioRepositoryMongoDB - salva");
-        return novoUsuario;
+        try {
+            Usuario novoUsuario = usuarioMongoSpringRepository.save(usuario);
+            log.info("[finish] UsuarioRepositoryMongoDB - salva");
+            return novoUsuario;
+
+        } catch (DuplicateKeyException ex) {
+            throw APIException.build(HttpStatus.CONFLICT, "O usuario já está cadastrado no sistema!");
+        }
     }
 
     @Override

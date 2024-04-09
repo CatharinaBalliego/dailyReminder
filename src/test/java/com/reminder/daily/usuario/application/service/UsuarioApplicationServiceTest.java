@@ -54,17 +54,17 @@ public class UsuarioApplicationServiceTest {
         //verify(usuarioRepository, times(1)).salva(new Usuario(usuarioRequest));
     }
 
-//    @Test
-//    public void salvarUsuario_emailDuplicado_Conflict(){
-//        Usuario usuario = DataHelper.getUsuario();
-//        UsuarioNovoRequest usuarioNovoRequest = DataHelper.getUsuarioRequest();
-//        when(usuarioRepository.salva(usuario)).thenThrow(APIException.class);
-//        //when(usuarioRepository.salva(usuario)).thenThrow(MongoWriteException.class);
-//        APIException exception = Assertions.assertThrows(APIException.class,
-//                () -> usuarioApplicationService.salvarUsuario(usuarioNovoRequest));
-//        assertEquals("Usuario já está cadastrado no sistema!",exception.getMessage());
-//
-//    }
+    @Test
+    public void salvarUsuario_emailDuplicado_Conflict(){
+        Usuario usuario = DataHelper.getUsuario();
+        UsuarioNovoRequest usuarioNovoRequest = DataHelper.getUsuarioRequest();
+        when(usuarioRepository.salva(any(Usuario.class)))
+                .thenThrow(APIException.build(HttpStatus.CONFLICT, "Usuario já está cadastrado no sistema!"));
+        APIException exception = Assertions.assertThrows(APIException.class,
+                () -> usuarioApplicationService.salvarUsuario(usuarioNovoRequest));
+        assertEquals("Usuario já está cadastrado no sistema!",exception.getMessage());
+
+    }
 
     @Test
     public void buscarUsuarioPorId_valido_UsuarioResponse(){
@@ -74,7 +74,7 @@ public class UsuarioApplicationServiceTest {
 
         Mockito.lenient().when(usuarioRepository.buscarUsuarioPorId(usuarioId)).thenReturn(usuario);
 
-
+        usuarioApplicationService.buscarUsuarioPorId(usuarioId);
         assertEquals(usuario.getIdUsuario(), usuarioResponse.getIdUsuario());
     }
 
