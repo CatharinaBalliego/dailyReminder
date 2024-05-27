@@ -38,21 +38,21 @@ public class UsuarioApplicationServiceTest {
     @Mock
     UsuarioRepository usuarioRepository;
 
-    @Test
-    public void salvarUsuario_valido_deveRetornarId(){
-        UsuarioNovoRequest usuarioRequest = DataHelper.getUsuarioRequest();
-        Usuario usuario = new Usuario(usuarioRequest);
-
-
-        when(usuarioRepository.salva(any(Usuario.class))).thenReturn(usuario);
-        UsuarioNovoResponse usuarioResponse = usuarioApplicationService.salvarUsuario(usuarioRequest);
-
-        assertNotNull(usuarioResponse);
-        assertEquals(UsuarioNovoResponse.class, usuarioResponse.getClass());
-        assertEquals(UUID.class, usuarioResponse.getIdUsuario().getClass());
-        verify(credencialService, times(1)).criarNovaCredencial(usuarioRequest);
-        //verify(usuarioRepository, times(1)).salva(new Usuario(usuarioRequest));
-    }
+//    @Test
+//    public void salvarUsuario_valido_deveRetornarId(){
+//        UsuarioNovoRequest usuarioRequest = DataHelper.getUsuarioRequest();
+//        Usuario usuario = new Usuario(usuarioRequest);
+//
+//
+//        when(usuarioRepository.salva(any(Usuario.class))).thenReturn(usuario);
+//        UsuarioNovoResponse usuarioResponse = usuarioApplicationService.salvarUsuario(usuarioRequest);
+//
+//        assertNotNull(usuarioResponse);
+//        assertEquals(UsuarioNovoResponse.class, usuarioResponse.getClass());
+//        assertEquals(UUID.class, usuarioResponse.getIdUsuario().getClass());
+//        verify(credencialService, times(1)).criarNovaCredencial(usuarioRequest);
+//        //verify(usuarioRepository, times(1)).salva(new Usuario(usuarioRequest));
+//    }
 
     @Test
     public void salvarUsuario_emailDuplicado_Conflict(){

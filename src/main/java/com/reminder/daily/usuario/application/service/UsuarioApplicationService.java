@@ -1,5 +1,8 @@
 package com.reminder.daily.usuario.application.service;
 
+import com.reminder.daily.RabbitMQ.application.api.EmailRequest;
+import com.reminder.daily.RabbitMQ.domain.Fila;
+import com.reminder.daily.RabbitMQ.service.RabbitMQService;
 import com.reminder.daily.credencial.application.service.CredencialService;
 import com.reminder.daily.usuario.application.api.UsuarioNovoRequest;
 import com.reminder.daily.usuario.application.api.UsuarioNovoResponse;
@@ -19,12 +22,14 @@ import java.util.UUID;
 public class UsuarioApplicationService implements UsuarioService{
     private final UsuarioRepository usuarioRepository;
     private final CredencialService credencialService;
+    private final RabbitMQService rabbitMQService;
 
     @Override
     public UsuarioNovoResponse salvarUsuario(@Valid UsuarioNovoRequest usuarioNovoRequest) {
         log.info("[start] UsuarioApplicationService - salvarUsuario");
         credencialService.criarNovaCredencial(usuarioNovoRequest);
         Usuario usuario = usuarioRepository.salva(new Usuario(usuarioNovoRequest));
+        rabbitMQService.validarEmailUsuario("ms.email", new EmailRequest(usuario));
         log.info("[finish] UsuarioApplicationService - salvarUsuario");
         return new UsuarioNovoResponse(usuario);
     }
